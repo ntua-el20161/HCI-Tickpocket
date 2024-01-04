@@ -3,6 +3,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 //import 'package:tickpocket_app/ticket.dart';
 import 'package:tickpocket_app/routes/newpost.dart';
 import 'package:tickpocket_app/routes/inbox.dart';
@@ -11,9 +14,18 @@ import 'package:tickpocket_app/ticketlist.dart';
 
 final log = Logger('MainLogger');
 
-//TODO: List απο εισητήρια στην αρχικη σελίδα
+//TODO: Fix List απο εισητήρια στην αρχικη σελίδα
+//TODO: New Ticket text boxes
+//TODO: Messages
+//TODO: Ticket info
+//
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     print(
@@ -146,7 +158,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
-            return Ticket(1, 'lol live', 'lol club', '11/11/23', '150euro');
+            return TicketListTile(
+                Ticket(1, 'lol live', 'lol club', '11/11/23', '150euro'));
           },
         ),
 
@@ -167,19 +180,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
                   //New Post Button
                   IconButton(
-                      tooltip: 'New Post',
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/NewPost');
-                      },
-                      icon: const Icon(Icons.add_circle)),
+                    tooltip: 'New Post',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/NewPost');
+                    },
+                    icon: const Icon(Icons.add_circle_outline),
+                  ),
 
                   //Inbox Button
                   IconButton(
-                      tooltip: 'Chat',
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/Inbox');
-                      },
-                      icon: const Icon(Icons.inbox))
+                    tooltip: 'Chat',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/Inbox');
+                    },
+                    icon: const Icon(Icons.inbox_outlined),
+                  )
                 ])));
   }
 }

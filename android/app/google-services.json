@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1028604524203",
+    "project_id": "tickpocket-f094e",
+    "storage_bucket": "tickpocket-f094e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028604524203:android:3ed8339f77d35e1d6669ee",
+        "android_client_info": {
+          "package_name": "com.example.tickpocket_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkp0JrG2wp2cGXl-EmNyQhU_mVrFA4Q18"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

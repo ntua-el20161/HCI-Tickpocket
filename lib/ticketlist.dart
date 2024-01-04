@@ -4,7 +4,7 @@ import 'package:logging/logging.dart';
 final log = Logger('TaskLogger');
 
 // ignore: must_be_immutable
-class Ticket extends StatelessWidget {
+class Ticket {
   int? id;
   late String title;
   late String place;
@@ -31,28 +31,50 @@ class Ticket extends StatelessWidget {
     };
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Row(
-        children: [
-          Column(
-            children: [
-              Text(title),
-              Text(place),
-              Text(date),
-            ],
-          ),
-          Text(price),
-        ],
-      )
-    ]);
-  }
-
   static List<Ticket> getTickets(int howmany) {
     return List.generate(
         howmany,
         (index) => Ticket(index, "title:$index", "place: $index",
             "date: $index", "price: $index"));
+  }
+}
+
+class TicketListTile extends StatelessWidget {
+  final Ticket ticket;
+
+  const TicketListTile(this.ticket);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, top: 12.0),
+                child: Text(ticket.title),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: Text(ticket.place),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0, bottom: 12.0),
+                child: Text(ticket.date),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 15.0),
+            child: Text(ticket.price),
+          ),
+        ],
+      ),
+    );
   }
 }
