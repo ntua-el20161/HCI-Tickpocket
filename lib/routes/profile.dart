@@ -1,4 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+//import 'package:dotted_line/dotted_line.dart';
+import 'package:tickpocket_app/ticketlist.dart';
+import 'package:swipe_widget/swipe_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -10,12 +15,61 @@ class ProfileScreen extends StatelessWidget {
           title: const Text('Profile'),
           backgroundColor: const Color.fromARGB(255, 255, 131, 78),
         ),
-        body: Center(
-          child: ElevatedButton(
-            onPressed: () {
-              // Navigate back to first screen when tapped.
-            },
-            child: const Text('Go back!'),
+        body: SizedBox.expand(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
+              const ProfilePicture(
+                name: 'Deez',
+                radius: 60,
+                fontsize: 35,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 17.0, bottom: 30),
+                child: Text(
+                  'Deez',
+                  style: TextStyle(fontSize: 21),
+                ),
+              ),
+              const Divider(color: Colors.black),
+              const Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      'Posts',
+                      style: TextStyle(fontSize: 21),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('myTickets')
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      List<myTicketTile> myPostsList = [];
+                      if (snapshot.hasData) {
+                        final myTickets = snapshot.data?.docs.reversed.toList();
+                        for (var ticket in myTickets!) {
+                          final myTicketWidget = myTicketTile(Ticket(
+                              ticket['title'],
+                              ticket['place'],
+                              ticket['date'],
+                              ticket['price'],
+                              ticket['smallDesc']));
+                          myPostsList.add(myTicketWidget);
+                        }
+                      }
+                      return ListView(
+                        children: myPostsList,
+                      );
+                    }),
+              ),
+            ],
           ),
         ),
         bottomNavigationBar: BottomAppBar(

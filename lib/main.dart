@@ -5,6 +5,8 @@ import 'package:logging/logging.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:tickpocket_app/firestoreService.dart';
+import 'package:get/get.dart';
 
 //import 'package:tickpocket_app/ticket.dart';
 import 'package:tickpocket_app/routes/newpost.dart';
@@ -14,18 +16,15 @@ import 'package:tickpocket_app/ticketlist.dart';
 
 final log = Logger('MainLogger');
 
-//TODO: Fix List απο εισητήρια στην αρχικη σελίδα
-//TODO: New Ticket text boxes
 //TODO: Messages
 //TODO: Ticket info
-//
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  Get.put(TicketFirestoreService());
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
     print(
@@ -158,8 +157,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
-            return TicketListTile(
-                Ticket(1, 'lol live', 'lol club', '11/11/23', '150euro'));
+            return TicketTile(Ticket(
+                'lol live', 'lol club', '11/11/23', '150euro', 'EYEYEYEY'));
           },
         ),
 
