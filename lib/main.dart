@@ -27,7 +27,7 @@ void main() async {
   Get.put(TicketFirestoreService());
   Logger.root.level = Level.ALL; // defaults to Level.INFO
   Logger.root.onRecord.listen((record) {
-    print(
+    debugPrint(
         '${record.loggerName} --> ${record.level.name}: ${record.time}: ${record.message}');
   });
   runApp(const MyApp());
@@ -157,8 +157,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: ListView.builder(
           itemBuilder: (context, index) {
-            return TicketTile(Ticket(
-                'lol live', 'lol club', '11/11/23', '150euro', 'EYEYEYEY'));
+            Ticket newTicket = Ticket(
+                'lol live', 'lol club', '11/11/23', '150euro', 'EYEYEYEY' //''
+                );
+            return TicketTile(newTicket);
           },
         ),
 

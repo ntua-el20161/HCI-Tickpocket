@@ -22,14 +22,14 @@ class ProfileScreen extends StatelessWidget {
                 height: 50,
               ),
               const ProfilePicture(
-                name: 'Deez',
+                name: 'Deez Nuts',
                 radius: 60,
-                fontsize: 35,
+                fontsize: 30,
               ),
               const Padding(
                 padding: EdgeInsets.only(top: 17.0, bottom: 30),
                 child: Text(
-                  'Deez',
+                  'Deez Nuts',
                   style: TextStyle(fontSize: 21),
                 ),
               ),

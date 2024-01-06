@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:swipe_widget/swipe_widget.dart';
 import 'package:swipe_to/swipe_to.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
+import 'package:tickpocket_app/routes/ticketinfo.dart';
 
-final log = Logger('TaskLogger');
+final log = Logger('TicketLogger');
 
 // ignore: must_be_immutable
 class Ticket {
-  //int? id;
+  late String id;
   late String title;
   late String place;
   late String date;
@@ -15,38 +17,32 @@ class Ticket {
   late String smallDesc;
 
   Ticket(
-      //int? id,
-      this.title,
-      this.place,
-      this.date,
-      this.price,
-      this.smallDesc);
+    //int? id,
+    this.title,
+    this.place,
+    this.date,
+    this.price,
+    this.smallDesc,
+  ) : id = const Uuid().v4();
 
   Ticket.fromJson(Map<String, dynamic> json) {
-    //id = json['id'];
     title = json['title'];
     place = json['place'];
     date = json['date'];
     price = json['price'];
     smallDesc = json['smallDesc'];
+    id = json[const Uuid().v4()];
   }
 
   Map<String, dynamic> toJson() {
     return {
-      //'id': id,
       'title': title,
       'place': place,
       'date': date,
       'price': price,
-      'smallDesc': smallDesc
+      'smallDesc': smallDesc,
+      'id': id
     };
-  }
-
-  static List<Ticket> getTickets(int howmany) {
-    return List.generate(
-        howmany,
-        (index) => Ticket("title:$index", "place: $index", "date: $index",
-            "price: $index", "smallDesc: $index"));
   }
 }
 
@@ -59,32 +55,34 @@ class TicketTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, top: 12.0),
-                child: Text(ticket.title),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0),
-                child: Text(ticket.place),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, bottom: 12.0),
-                child: Text(ticket.date),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 15.0),
-            child: Text("${ticket.price}€"),
-          ),
-        ],
+      child: InkWell(
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0, top: 12.0),
+                  child: Text(ticket.title),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0),
+                  child: Text(ticket.place),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 15.0, bottom: 12.0),
+                  child: Text(ticket.date),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Text("${ticket.price}€"),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -99,43 +97,108 @@ class myTicketTile extends StatefulWidget {
 }
 
 class _myTicketTileState extends State<myTicketTile> {
-  void Delete() {}
+  void deleteDocument() async {
+    try {
+      String documentTitle = widget.ticket.title;
+
+      if (documentTitle.isNotEmpty) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection('myTickets')
+            .where('title', isEqualTo: documentTitle)
+            .get();
+        print(querySnapshot.docs.first.id);
+        log.info(querySnapshot.docs.first.id);
+        if (querySnapshot.docs.isNotEmpty) {
+          await FirebaseFirestore.instance
+              .collection('myTickets')
+              .doc(querySnapshot.docs.first.id)
+              .delete();
+        }
+      } else {
+        print("Document id is null or empty");
+      }
+    } catch (e) {
+      print("Error deleting document: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return SwipeTo(
       iconOnLeftSwipe: Icons.delete,
       onLeftSwipe: (details) {
-        Delete();
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text('Confirm Deletion'),
+                content: Text('Are you sure you want to delete this ticket?'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      // User confirmed deletion
+                      Navigator.of(context).pop();
+                      deleteDocument();
+                    },
+                    child: Text("Yes"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      // User canceled deletion
+                      Navigator.of(context).pop();
+                    },
+                    child: Text("No"),
+                  ),
+                ],
+              );
+            });
       },
-      child: Card(
-        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, top: 12.0),
-                  child: Text(widget.ticket.title),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0),
-                  child: Text(widget.ticket.place),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15.0, bottom: 12.0),
-                  child: Text(widget.ticket.date),
-                ),
-              ],
+      offsetDx: 1,
+      animationDuration: const Duration(milliseconds: 150),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => new TicketInfo(
+                  true,
+                  widget.ticket.title,
+                  widget.ticket.place,
+                  widget.ticket.date,
+                  widget.ticket.price,
+                  widget.ticket.smallDesc),
             ),
-            Padding(
-              padding: const EdgeInsets.only(right: 15.0),
-              child: Text("${widget.ticket.price}€"),
-            ),
-          ],
+          );
+        },
+        child: Card(
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0, top: 12.0),
+                    child: Text(widget.ticket.title),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0),
+                    child: Text(widget.ticket.place),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15.0, bottom: 12.0),
+                    child: Text(widget.ticket.date),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Text("${widget.ticket.price}€"),
+              ),
+            ],
+          ),
         ),
       ),
     );

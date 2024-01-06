@@ -44,6 +44,7 @@ dependencies:
   dotted_line: ^3.2.2
   swipe_widget: ^0.0.2+1
   swipe_to: ^1.0.5
+  uuid: ^4.2.2
 
 dev_dependencies:
   flutter_test:

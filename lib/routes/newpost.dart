@@ -98,6 +98,7 @@ class _TextFieldState extends State<NewTicketForm> {
       padding: const EdgeInsets.only(top: 30),
       child: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             buildTextField(_titleController, 'Title'),
             buildTextField(_placeController, 'Place'),
@@ -138,6 +139,7 @@ class _TextFieldState extends State<NewTicketForm> {
           _dateController.text,
           _priceController.text,
           _descriptionController.text,
+          //'' //Αυτό είναι το id. Αφήνουμε το firestore να διαλέξει ένα τυχαίο περνώντας το κενό string
         ));
         //TODO: potential issue here
         ScaffoldMessenger.of(context).showSnackBar(
