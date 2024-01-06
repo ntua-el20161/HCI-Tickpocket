@@ -131,8 +131,8 @@ class _myTicketTileState extends State<myTicketTile> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Confirm Deletion'),
-                content: Text('Are you sure you want to delete this ticket?'),
+                title: const Text('Confirm Deletion'),
+                content: const Text('Are you sure you want to delete this ticket?'),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -140,14 +140,14 @@ class _myTicketTileState extends State<myTicketTile> {
                       Navigator.of(context).pop();
                       deleteDocument();
                     },
-                    child: Text("Yes"),
+                    child: const Text("Yes"),
                   ),
                   TextButton(
                     onPressed: () {
                       // User canceled deletion
                       Navigator.of(context).pop();
                     },
-                    child: Text("No"),
+                    child: const Text("No"),
                   ),
                 ],
               );
@@ -160,7 +160,7 @@ class _myTicketTileState extends State<myTicketTile> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => new TicketInfo(
+              builder: (context) => TicketInfo(
                   true,
                   widget.ticket.title,
                   widget.ticket.place,

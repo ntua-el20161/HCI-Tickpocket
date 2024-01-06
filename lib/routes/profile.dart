@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-//import 'package:dotted_line/dotted_line.dart';
 import 'package:tickpocket_app/ticketlist.dart';
-import 'package:swipe_widget/swipe_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});

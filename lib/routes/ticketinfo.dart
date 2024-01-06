@@ -20,7 +20,7 @@ class TicketInfo extends StatelessWidget {
         ),
         body: Column(
           children: [
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 10, left: 15, bottom: 7),
               child: Row(
                 children: [
@@ -39,7 +39,7 @@ class TicketInfo extends StatelessWidget {
                 ],
               ),
             ),
-            Divider(
+            const Divider(
               color: Colors.black,
             ),
             Text(title)
