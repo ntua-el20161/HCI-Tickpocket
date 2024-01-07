@@ -54,11 +54,13 @@ class ProfileScreen extends StatelessWidget {
                         final myTickets = snapshot.data?.docs.reversed.toList();
                         for (var ticket in myTickets!) {
                           final myTicketWidget = myTicketTile(Ticket(
-                              ticket['title'],
-                              ticket['place'],
-                              ticket['date'],
-                              ticket['price'],
-                              ticket['smallDesc']));
+                            ticket['username'],
+                            ticket['title'],
+                            ticket['place'],
+                            ticket['date'],
+                            ticket['price'],
+                            ticket['smallDesc'],
+                          ));
                           myPostsList.add(myTicketWidget);
                         }
                       }

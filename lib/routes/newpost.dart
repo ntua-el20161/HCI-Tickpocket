@@ -94,30 +94,29 @@ class _TextFieldState extends State<NewTicketForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            buildTextField(_titleController, 'Title'),
-            buildTextField(_placeController, 'Place'),
-            buildTextField(_dateController, 'Date'),
-            buildTextField(_priceController, 'Price'),
-            buildTextField(_descriptionController, 'Small Description'),
-            const SizedBox(
-              height: 50,
-            ),
-            SizedBox(
-              width: 300,
-              child: ElevatedButton(
-                  child: const Text('Post'),
-                  onPressed: () async {
-                    await postTicket();
-                  }),
-            ),
-          ],
-        ),
+    return Center(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 30,
+          ),
+          buildTextField(_titleController, 'Title'),
+          buildTextField(_placeController, 'Place'),
+          buildTextField(_dateController, 'Date'),
+          buildTextField(_priceController, 'Price'),
+          buildTextField(_descriptionController, 'Small Description'),
+          const SizedBox(
+            height: 50,
+          ),
+          SizedBox(
+            width: 300,
+            child: ElevatedButton(
+                child: const Text('Post'),
+                onPressed: () async {
+                  await postTicket();
+                }),
+          ),
+        ],
       ),
     );
   }
@@ -134,13 +133,12 @@ class _TextFieldState extends State<NewTicketForm> {
           _priceController.text.isNotEmpty &&
           _descriptionController.text.isNotEmpty) {
         await ticketFirestoreService.addTicketToDb(Ticket(
-          _titleController.text,
-          _placeController.text,
-          _dateController.text,
-          _priceController.text,
-          _descriptionController.text,
-          //'' //Αυτό είναι το id. Αφήνουμε το firestore να διαλέξει ένα τυχαίο περνώντας το κενό string
-        ));
+            _titleController.text,
+            _placeController.text,
+            _dateController.text,
+            _priceController.text,
+            _descriptionController.text,
+            'Deez Nuts'));
         //TODO: potential issue here
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

@@ -9,6 +9,7 @@ final log = Logger('TicketLogger');
 
 // ignore: must_be_immutable
 class Ticket {
+  late String username;
   late String id;
   late String title;
   late String place;
@@ -18,6 +19,7 @@ class Ticket {
 
   Ticket(
     //int? id,
+    this.username,
     this.title,
     this.place,
     this.date,
@@ -26,6 +28,7 @@ class Ticket {
   ) : id = const Uuid().v4();
 
   Ticket.fromJson(Map<String, dynamic> json) {
+    username = json['username'];
     title = json['title'];
     place = json['place'];
     date = json['date'];
@@ -36,6 +39,7 @@ class Ticket {
 
   Map<String, dynamic> toJson() {
     return {
+      'username': username,
       'title': title,
       'place': place,
       'date': date,
@@ -56,6 +60,21 @@ class TicketTile extends StatelessWidget {
     return Card(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TicketInfo(
+                  ticket.username,
+                  true,
+                  ticket.title,
+                  ticket.place,
+                  ticket.date,
+                  ticket.price,
+                  ticket.smallDesc),
+            ),
+          );
+        },
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,7 +151,8 @@ class _myTicketTileState extends State<myTicketTile> {
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Confirm Deletion'),
-                content: const Text('Are you sure you want to delete this ticket?'),
+                content:
+                    const Text('Are you sure you want to delete this ticket?'),
                 actions: [
                   TextButton(
                     onPressed: () {
@@ -156,12 +176,14 @@ class _myTicketTileState extends State<myTicketTile> {
       offsetDx: 1,
       animationDuration: const Duration(milliseconds: 150),
       child: InkWell(
+        enableFeedback: true,
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => TicketInfo(
-                  true,
+                  widget.ticket.username,
+                  false,
                   widget.ticket.title,
                   widget.ticket.place,
                   widget.ticket.date,

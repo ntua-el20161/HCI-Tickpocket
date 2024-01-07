@@ -6,6 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:tickpocket_app/firestoreService.dart';
 import 'package:get/get.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 //import 'package:tickpocket_app/ticket.dart';
 import 'package:tickpocket_app/routes/newpost.dart';
@@ -121,6 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
             SearchAnchor(
                 searchController: controller,
                 isFullScreen: false,
+                viewConstraints: BoxConstraints(minWidth: 500),
                 builder: (BuildContext context, SearchController controller) {
                   return IconButton(
                     icon: const Icon(Icons.search),
@@ -154,14 +156,29 @@ class _MyHomePageState extends State<MyHomePage> {
             )
           ],
         ),
-        body: ListView.builder(
-          itemBuilder: (context, index) {
-            Ticket newTicket = Ticket(
-                'lol live', 'lol club', '11/11/23', '150euro', 'EYEYEYEY' //''
-                );
-            return TicketTile(newTicket);
-          },
-        ),
+        body: StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection('Tickets').snapshots(),
+            builder: (context, snapshot) {
+              List<TicketTile> PostsList = [];
+              if (snapshot.hasData) {
+                final Tickets = snapshot.data?.docs.reversed.toList();
+                for (var ticket in Tickets!) {
+                  final TicketWidget = TicketTile(Ticket(
+                    ticket['username'],
+                    ticket['title'],
+                    ticket['place'],
+                    ticket['date'],
+                    ticket['price'],
+                    ticket['smallDesc'],
+                  ));
+                  PostsList.add(TicketWidget);
+                }
+              }
+              return ListView(
+                children: PostsList,
+              );
+            }),
 
         //Μπάρα στο κάτω μέρος της οθόνης
         bottomNavigationBar: BottomAppBar(
