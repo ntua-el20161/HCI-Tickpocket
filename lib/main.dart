@@ -9,15 +9,21 @@ import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 //import 'package:tickpocket_app/ticket.dart';
+import 'package:tickpocket_app/search.dart';
 import 'package:tickpocket_app/routes/newpost.dart';
 import 'package:tickpocket_app/routes/inbox.dart';
 import 'package:tickpocket_app/routes/profile.dart';
 import 'package:tickpocket_app/ticketlist.dart';
+import 'package:camera/camera.dart';
+import 'package:tickpocket_app/camera.dart';
 
 final log = Logger('MainLogger');
 
 //TODO: Messages
 //TODO: Ticket info
+
+late List<CameraDescription> _cameras;
+late CameraDescription firstCamera;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,6 +36,9 @@ void main() async {
     debugPrint(
         '${record.loggerName} --> ${record.level.name}: ${record.time}: ${record.message}');
   });
+  _cameras = await availableCameras();
+  firstCamera = _cameras.first;
+
   runApp(const MyApp());
 }
 
@@ -92,6 +101,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
   final SearchController controller = SearchController();
+  late CameraController _cameraController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _cameraController = CameraController(_cameras[0], ResolutionPreset.max);
+    _cameraController.initialize().then((_) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,34 +140,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
           //Search button and profile button
           actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        CameraScreenWidget(camera: firstCamera)));
+              },
+              icon: const Icon(Icons.camera_alt),
+            ),
             //Search Button
             //TODO: Να κάνει fit το χώρο
-            SearchAnchor(
-                searchController: controller,
-                isFullScreen: false,
-                viewConstraints: BoxConstraints(minWidth: 500),
-                builder: (BuildContext context, SearchController controller) {
-                  return IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () {
-                      controller.openView();
-                    },
-                  );
-                },
-                suggestionsBuilder:
-                    (BuildContext context, SearchController controller) {
-                  return List<ListTile>.generate(5, (int index) {
-                    final String item = 'item $index';
-                    return ListTile(
-                      title: Text(item),
-                      onTap: () {
-                        setState(() {
-                          controller.closeView(item);
-                        });
-                      },
-                    );
-                  });
-                }),
+            const TicketSearchAnchor(),
 
             //Profile Button
             IconButton(
@@ -153,7 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.pushNamed(context, '/Profile');
               },
               icon: const Icon(Icons.account_circle_rounded),
-            )
+            ),
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(

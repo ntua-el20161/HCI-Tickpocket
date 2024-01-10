@@ -34,7 +34,6 @@ class Ticket {
     date = json['date'];
     price = json['price'];
     smallDesc = json['smallDesc'];
-    id = json[const Uuid().v4()];
   }
 
   Map<String, dynamic> toJson() {
@@ -60,6 +59,7 @@ class TicketTile extends StatelessWidget {
     return Card(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: InkWell(
+        enableFeedback: true,
         onTap: () {
           Navigator.push(
             context,

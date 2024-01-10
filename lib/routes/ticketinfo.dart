@@ -24,7 +24,7 @@ class TicketInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 10, left: 15, bottom: 7),
+              padding: const EdgeInsets.only(top: 10, left: 15, bottom: 7),
               child: Row(
                 children: [
                   ProfilePicture(
@@ -32,12 +32,12 @@ class TicketInfo extends StatelessWidget {
                     radius: 30,
                     fontsize: 15,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 15,
                   ),
                   Text(
                     username,
-                    style: TextStyle(fontSize: 20),
+                    style: const TextStyle(fontSize: 20),
                   )
                 ],
               ),
@@ -74,7 +74,7 @@ class TicketInfo extends StatelessWidget {
                 style: const TextStyle(fontSize: 17),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             fromOtherUser

@@ -133,12 +133,13 @@ class _TextFieldState extends State<NewTicketForm> {
           _priceController.text.isNotEmpty &&
           _descriptionController.text.isNotEmpty) {
         await ticketFirestoreService.addTicketToDb(Ticket(
-            _titleController.text,
-            _placeController.text,
-            _dateController.text,
-            _priceController.text,
-            _descriptionController.text,
-            'Deez Nuts'));
+          'Deez Nuts',
+          _titleController.text,
+          _placeController.text,
+          _dateController.text,
+          _priceController.text,
+          _descriptionController.text,
+        ));
         //TODO: potential issue here
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
