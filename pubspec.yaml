@@ -47,6 +47,8 @@ dependencies:
   uuid: ^4.2.2
   camera: ^0.10.5+9
   google_mlkit_text_recognition: ^0.11.0
+  firebase_auth: ^4.16.0
+  provider:
 
 dev_dependencies:
   flutter_test:

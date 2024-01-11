@@ -95,28 +95,43 @@ class _TextFieldState extends State<NewTicketForm> {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 30,
-          ),
-          buildTextField(_titleController, 'Title'),
-          buildTextField(_placeController, 'Place'),
-          buildTextField(_dateController, 'Date'),
-          buildTextField(_priceController, 'Price'),
-          buildTextField(_descriptionController, 'Small Description'),
-          const SizedBox(
-            height: 50,
-          ),
-          SizedBox(
-            width: 300,
-            child: ElevatedButton(
-                child: const Text('Post'),
-                onPressed: () async {
-                  await postTicket();
-                }),
-          ),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(40.0),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            buildTextField(_titleController, 'Title'),
+            const SizedBox(
+              height: 15,
+            ),
+            buildTextField(_placeController, 'Place'),
+            const SizedBox(
+              height: 15,
+            ),
+            buildTextField(_dateController, 'Date'),
+            const SizedBox(
+              height: 15,
+            ),
+            buildTextField(_priceController, 'Price'),
+            const SizedBox(
+              height: 15,
+            ),
+            buildTextField(_descriptionController, 'Small Description'),
+            const SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+              width: 300,
+              child: ElevatedButton(
+                  child: const Text('Post'),
+                  onPressed: () async {
+                    await postTicket();
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -175,46 +190,39 @@ class _TextFieldState extends State<NewTicketForm> {
 
   //δομή ενός text field
   Widget buildTextField(TextEditingController controller, String labelText) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, bottom: 10),
-      child: SizedBox(
-        width: 300,
-        //όταν πρόκειται για ημερομηνία, υπάρχουν αλλαγές ωστε να εμφανίζεται ένας date picker
-        child: labelText == 'Date'
-            ? InkWell(
-                onTap: () => _selectDate(context),
-                child: IgnorePointer(
-                  child: TextField(
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: labelText,
-                    ),
-                    controller: controller,
-                  ),
+    return labelText == 'Date'
+        ? InkWell(
+            onTap: () => _selectDate(context),
+            child: IgnorePointer(
+              child: TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: labelText,
                 ),
+                controller: controller,
+              ),
+            ),
+          )
+        //στο price field το πληκτρολόγιο που εμφανίζεται περιέχει μόνο αριθμούς
+        : (labelText == 'Price'
+            ? TextField(
+                keyboardType: TextInputType.number,
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: labelText,
+                ),
+                controller: controller,
               )
-            //στο price field το πληκτρολόγιο που εμφανίζεται περιέχει μόνο αριθμούς
-            : (labelText == 'Price'
-                ? TextField(
-                    keyboardType: TextInputType.number,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: labelText,
-                    ),
-                    controller: controller,
-                  )
-                : TextField(
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: labelText,
-                    ),
-                    controller: controller,
-                  )),
-      ),
-    );
+            : TextField(
+                obscureText: false,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: labelText,
+                ),
+                controller: controller,
+              ));
   }
 
   Future<void> _selectDate(BuildContext context) async {

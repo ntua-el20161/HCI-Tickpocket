@@ -86,7 +86,7 @@ class TicketInfo extends StatelessWidget {
                           child: const Text('Message Seller')),
                     ),
                   )
-                : const SizedBox()
+                : Container()
           ],
         ));
   }

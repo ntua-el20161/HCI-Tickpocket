@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:tickpocket_app/services/auth_gate.dart';
+import 'package:tickpocket_app/services/auth_service.dart';
 import 'firebase_options.dart';
 import 'package:tickpocket_app/firestoreService.dart';
 import 'package:get/get.dart';
@@ -39,7 +42,10 @@ void main() async {
   _cameras = await availableCameras();
   firstCamera = _cameras.first;
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+        create: (context) => AuthService(), child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -71,7 +77,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: const Color(0XFFFF834E)),
           useMaterial3: true,
         ),
-        home: const MyHomePage(title: 'Tickpocket'),
+        home: const AuthGate(),
         routes: {
           '/NewPost': (context) => const NewPostScreen(),
           '/Inbox': (context) => const InboxScreen(),
