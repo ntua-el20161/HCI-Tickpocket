@@ -115,7 +115,10 @@ class _ChatPageState extends State<ChatPage> {
             const SizedBox(
               height: 5,
             ),
-            ChatBubble(message: data['message'])
+            ChatBubble(message: data['message']),
+            const SizedBox(
+              height: 10,
+            ),
           ]),
     );
   }

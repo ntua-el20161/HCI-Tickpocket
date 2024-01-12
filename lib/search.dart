@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:tickpocket_app/ticketlist.dart';
@@ -12,6 +13,8 @@ class TicketSearchAnchor extends StatefulWidget {
 
 class TicketSearchAnchorState extends State<TicketSearchAnchor> {
   String? _searchingWithQuery;
+
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   late Iterable<Widget> _lastOptions = <Widget>[];
   @override
@@ -49,8 +52,11 @@ class TicketSearchAnchorState extends State<TicketSearchAnchor> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => TicketInfo(
-                      ticket.username,
-                      true,
+                      ticket.email,
+                      ticket.email !=
+                              _firebaseAuth.currentUser!.email.toString()
+                          ? true
+                          : false,
                       ticket.title,
                       ticket.place,
                       ticket.date,
@@ -68,20 +74,16 @@ class TicketSearchAnchorState extends State<TicketSearchAnchor> {
   }
 
   Future<List<Ticket>> searchTickets(String? text) async {
-    // Perform Firestore query to search for tickets based on the input text
-    // Replace 'your_collection' with your Firestore collection name
-    final QuerySnapshot<Map<String, dynamic>> result = await FirebaseFirestore
+    final QuerySnapshot<Map<String, dynamic>> query = await FirebaseFirestore
         .instance
         .collection('Tickets')
         .where('title', isGreaterThanOrEqualTo: text)
-        .where('title',
-            isLessThan:
-                '${text!}z') // Example: search titles starting with the input text
-        .get();
+        .where('title', isLessThan: '${text!}z')
+        .get(); // Example: search titles starting with the input text
 
-    // Extract ticket titles from the result
+    // Extract ticket titles from the query
     final List<Ticket> tickets =
-        result.docs.map((doc) => Ticket.fromJson(doc.data())).toList();
+        query.docs.map((doc) => Ticket.fromJson(doc.data())).toList();
     if (text == '') {
       return List<Ticket>.empty();
     }

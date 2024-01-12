@@ -24,7 +24,7 @@ class SearchResults extends StatelessWidget {
             List<TicketTile> resultsList = [];
             for (var ticket in snapshot.data!) {
               final ticketWidget = TicketTile(Ticket(
-                ticket.username,
+                ticket.email,
                 ticket.title,
                 ticket.place,
                 ticket.date,

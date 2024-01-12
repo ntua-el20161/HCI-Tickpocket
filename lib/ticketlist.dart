@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 import 'package:swipe_to/swipe_to.dart';
@@ -9,7 +10,7 @@ final log = Logger('TicketLogger');
 
 // ignore: must_be_immutable
 class Ticket {
-  late String username;
+  late String email;
   late String id;
   late String title;
   late String place;
@@ -19,7 +20,7 @@ class Ticket {
 
   Ticket(
     //int? id,
-    this.username,
+    this.email,
     this.title,
     this.place,
     this.date,
@@ -28,7 +29,7 @@ class Ticket {
   ) : id = const Uuid().v4();
 
   Ticket.fromJson(Map<String, dynamic> json) {
-    username = json['username'];
+    email = json['email'];
     title = json['title'];
     place = json['place'];
     date = json['date'];
@@ -38,7 +39,7 @@ class Ticket {
 
   Map<String, dynamic> toJson() {
     return {
-      'username': username,
+      'email': email,
       'title': title,
       'place': place,
       'date': date,
@@ -64,14 +65,8 @@ class TicketTile extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => TicketInfo(
-                  ticket.username,
-                  true,
-                  ticket.title,
-                  ticket.place,
-                  ticket.date,
-                  ticket.price,
-                  ticket.smallDesc),
+              builder: (context) => TicketInfo(ticket.email, true, ticket.title,
+                  ticket.place, ticket.date, ticket.price, ticket.smallDesc),
             ),
           );
         },
@@ -116,20 +111,22 @@ class myTicketTile extends StatefulWidget {
 }
 
 class _myTicketTileState extends State<myTicketTile> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   void deleteDocument() async {
     try {
       String documentTitle = widget.ticket.title;
 
       if (documentTitle.isNotEmpty) {
         QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-            .collection('myTickets')
+            .collection('Tickets')
+            .where('email',
+                isEqualTo: _firebaseAuth.currentUser!.email.toString())
             .where('title', isEqualTo: documentTitle)
             .get();
-        print(querySnapshot.docs.first.id);
-        log.info(querySnapshot.docs.first.id);
         if (querySnapshot.docs.isNotEmpty) {
           await FirebaseFirestore.instance
-              .collection('myTickets')
+              .collection('Tickets')
               .doc(querySnapshot.docs.first.id)
               .delete();
         }
@@ -182,7 +179,7 @@ class _myTicketTileState extends State<myTicketTile> {
             context,
             MaterialPageRoute(
               builder: (context) => TicketInfo(
-                  widget.ticket.username,
+                  widget.ticket.email,
                   false,
                   widget.ticket.title,
                   widget.ticket.place,

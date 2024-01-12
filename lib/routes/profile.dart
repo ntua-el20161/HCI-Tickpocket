@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   void signOut() {
     final authService = Provider.of<AuthService>(context, listen: false);
     authService.signOut();
@@ -43,16 +46,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 50,
               ),
-              const ProfilePicture(
-                name: 'Deez Nuts',
+              ProfilePicture(
+                name: _firebaseAuth.currentUser!.email.toString(),
                 radius: 60,
                 fontsize: 30,
               ),
-              const Padding(
-                padding: EdgeInsets.only(top: 17.0, bottom: 30),
+              Padding(
+                padding: const EdgeInsets.only(top: 17.0, bottom: 30),
                 child: Text(
-                  'Deez Nuts',
-                  style: TextStyle(fontSize: 21),
+                  _firebaseAuth.currentUser!.email.toString(),
+                  style: const TextStyle(fontSize: 21),
                 ),
               ),
               const Divider(color: Colors.black),
@@ -70,7 +73,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('myTickets')
+                        .collection('Tickets')
+                        .where('email',
+                            isEqualTo:
+                                _firebaseAuth.currentUser!.email.toString())
                         .snapshots(),
                     builder: (context, snapshot) {
                       List<myTicketTile> myPostsList = [];
@@ -78,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         final myTickets = snapshot.data?.docs.reversed.toList();
                         for (var ticket in myTickets!) {
                           final myTicketWidget = myTicketTile(Ticket(
-                            ticket['username'],
+                            ticket['email'],
                             ticket['title'],
                             ticket['place'],
                             ticket['date'],

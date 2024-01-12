@@ -1,4 +1,5 @@
 // ignore: unused_import
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
         ),
         home: const AuthGate(),
         routes: {
-          '/NewPost': (context) => const NewPostScreen(),
+          '/NewPost': (context) => NewPostScreen(),
           '/Inbox': (context) => const InboxScreen(),
           '/Profile': (context) => const ProfileScreen()
         });
@@ -87,7 +88,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -99,7 +100,6 @@ class MyHomePage extends StatefulWidget {
   // always marked "final".
 
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -108,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int currentPageIndex = 0;
   final SearchController controller = SearchController();
   late CameraController _cameraController;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -169,15 +170,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         body: StreamBuilder<QuerySnapshot>(
-            stream:
-                FirebaseFirestore.instance.collection('Tickets').snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('Tickets')
+                .where('email',
+                    isNotEqualTo: _firebaseAuth.currentUser!.email.toString())
+                .snapshots(),
             builder: (context, snapshot) {
               List<TicketTile> PostsList = [];
               if (snapshot.hasData) {
                 final Tickets = snapshot.data?.docs.reversed.toList();
                 for (var ticket in Tickets!) {
                   final TicketWidget = TicketTile(Ticket(
-                    ticket['username'],
+                    ticket['email'],
                     ticket['title'],
                     ticket['place'],
                     ticket['date'],

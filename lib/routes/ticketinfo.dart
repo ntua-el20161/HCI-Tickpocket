@@ -1,15 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:tickpocket_app/routes/chatpage.dart';
 
 class TicketInfo extends StatelessWidget {
   final bool fromOtherUser;
-  final String username;
+  final String email;
   final String title;
   final String place;
   final String date;
   final String price;
   final String smallDesc;
-  const TicketInfo(this.username, this.fromOtherUser, this.title, this.place,
+  const TicketInfo(this.email, this.fromOtherUser, this.title, this.place,
       this.date, this.price, this.smallDesc,
       {super.key});
 
@@ -28,7 +30,7 @@ class TicketInfo extends StatelessWidget {
               child: Row(
                 children: [
                   ProfilePicture(
-                    name: username,
+                    name: email,
                     radius: 30,
                     fontsize: 15,
                   ),
@@ -36,7 +38,7 @@ class TicketInfo extends StatelessWidget {
                     width: 15,
                   ),
                   Text(
-                    username,
+                    email,
                     style: const TextStyle(fontSize: 20),
                   )
                 ],
@@ -82,12 +84,35 @@ class TicketInfo extends StatelessWidget {
                     child: SizedBox(
                       width: 300,
                       child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _navigateToChat(context);
+                          },
                           child: const Text('Message Seller')),
                     ),
                   )
                 : Container()
           ],
         ));
+  }
+
+  Future<void> _navigateToChat(BuildContext context) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('email', isEqualTo: email)
+        .get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final userId = querySnapshot.docs.first.id;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ChatPage(
+            receiverUserEmail: email,
+            receiverUserID: userId,
+          ),
+        ),
+      );
+    }
   }
 }

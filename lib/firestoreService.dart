@@ -8,6 +8,6 @@ class TicketFirestoreService extends GetxController {
   final _db = FirebaseFirestore.instance;
 
   Future<void> addTicketToDb(Ticket ticket) async {
-    await _db.collection("myTickets").add(ticket.toJson());
+    await _db.collection("Tickets").add(ticket.toJson());
   }
 }

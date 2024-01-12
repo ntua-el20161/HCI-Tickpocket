@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tickpocket_app/firestoreService.dart';
 import 'package:get/get.dart';
@@ -60,8 +61,9 @@ class NewTicketForm extends StatefulWidget {
 }
 
 class _TextFieldState extends State<NewTicketForm> {
-  late DateTime _selectedDate;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
+  late DateTime _selectedDate;
   late TextEditingController _titleController;
   late TextEditingController _placeController;
   late TextEditingController _dateController;
@@ -148,7 +150,7 @@ class _TextFieldState extends State<NewTicketForm> {
           _priceController.text.isNotEmpty &&
           _descriptionController.text.isNotEmpty) {
         await ticketFirestoreService.addTicketToDb(Ticket(
-          'Deez Nuts',
+          _firebaseAuth.currentUser!.email.toString(),
           _titleController.text,
           _placeController.text,
           _dateController.text,
@@ -236,7 +238,7 @@ class _TextFieldState extends State<NewTicketForm> {
     if (picked != null && picked != _selectedDate) {
       setState(() {
         _selectedDate = picked;
-        _dateController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _dateController.text = DateFormat('dd-MM-yyyy').format(picked);
       });
     }
   }
