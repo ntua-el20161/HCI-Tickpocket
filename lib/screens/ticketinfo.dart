@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_profile_picture/flutter_profile_picture.dart';
-import 'package:tickpocket_app/routes/chatpage.dart';
+import 'package:tickpocket_app/screens/chatpage.dart';
 
 class TicketInfo extends StatelessWidget {
   final bool fromOtherUser;

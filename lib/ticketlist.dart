@@ -4,7 +4,7 @@ import 'package:logging/logging.dart';
 import 'package:swipe_to/swipe_to.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
-import 'package:tickpocket_app/routes/ticketinfo.dart';
+import 'package:tickpocket_app/screens/ticketinfo.dart';
 
 final log = Logger('TicketLogger');
 
@@ -102,15 +102,15 @@ class TicketTile extends StatelessWidget {
   }
 }
 
-class myTicketTile extends StatefulWidget {
+class MyTicketTile extends StatefulWidget {
   final Ticket ticket;
-  const myTicketTile(this.ticket, {super.key});
+  const MyTicketTile(this.ticket, {super.key});
 
   @override
-  State<myTicketTile> createState() => _myTicketTileState();
+  State<MyTicketTile> createState() => _MyTicketTileState();
 }
 
-class _myTicketTileState extends State<myTicketTile> {
+class _MyTicketTileState extends State<MyTicketTile> {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   void deleteDocument() async {

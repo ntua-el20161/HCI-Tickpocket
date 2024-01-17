@@ -49,9 +49,6 @@ class _RegisterPageState extends State<RegisterPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 100,
-                  ),
                   MyTextField(
                       controller: emailController,
                       obscureText: false,

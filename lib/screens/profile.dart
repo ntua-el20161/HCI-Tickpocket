@@ -79,11 +79,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 _firebaseAuth.currentUser!.email.toString())
                         .snapshots(),
                     builder: (context, snapshot) {
-                      List<myTicketTile> myPostsList = [];
+                      List<MyTicketTile> myPostsList = [];
                       if (snapshot.hasData) {
                         final myTickets = snapshot.data?.docs.reversed.toList();
                         for (var ticket in myTickets!) {
-                          final myTicketWidget = myTicketTile(Ticket(
+                          final myTicketWidget = MyTicketTile(Ticket(
                             ticket['email'],
                             ticket['title'],
                             ticket['place'],

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tickpocket_app/firestoreService.dart';
+import 'package:tickpocket_app/services/firestore_service.dart';
 import 'package:get/get.dart';
 import 'package:tickpocket_app/ticketlist.dart';
 import 'package:intl/intl.dart';

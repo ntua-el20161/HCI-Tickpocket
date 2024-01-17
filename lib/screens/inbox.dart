@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tickpocket_app/routes/chatpage.dart';
+import 'package:flutter_profile_picture/flutter_profile_picture.dart';
+import 'package:tickpocket_app/screens/chatpage.dart';
 
 class InboxScreen extends StatefulWidget {
   const InboxScreen({super.key});
@@ -107,19 +108,34 @@ class _InboxScreenState extends State<InboxScreen> {
             final userData = snapshot.data?.data();
             final otherUserEmail = userData?['email'] ?? 'Unknown Email';
 
-            return ListTile(
-              title: Text(otherUserEmail),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatPage(
-                      receiverUserEmail: otherUserEmail,
-                      receiverUserID: otherUserId,
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  child: ListTile(
+                    tileColor: const Color.fromARGB(255, 202, 202, 201),
+                    leading: ProfilePicture(
+                      name: otherUserEmail,
+                      radius: 20,
+                      fontsize: 15,
                     ),
+                    title: Text(otherUserEmail),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ChatPage(
+                            receiverUserEmail: otherUserEmail,
+                            receiverUserID: otherUserId,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             );
           }
 

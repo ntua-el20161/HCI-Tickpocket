@@ -7,24 +7,21 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:tickpocket_app/services/auth_gate.dart';
 import 'package:tickpocket_app/services/auth_service.dart';
-import 'firebase_options.dart';
-import 'package:tickpocket_app/firestoreService.dart';
+import 'services/firebase_options.dart';
+import 'package:tickpocket_app/services/firestore_service.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 //import 'package:tickpocket_app/ticket.dart';
 import 'package:tickpocket_app/search.dart';
-import 'package:tickpocket_app/routes/newpost.dart';
-import 'package:tickpocket_app/routes/inbox.dart';
-import 'package:tickpocket_app/routes/profile.dart';
+import 'package:tickpocket_app/screens/newpost.dart';
+import 'package:tickpocket_app/screens/inbox.dart';
+import 'package:tickpocket_app/screens/profile.dart';
 import 'package:tickpocket_app/ticketlist.dart';
 import 'package:camera/camera.dart';
-import 'package:tickpocket_app/camera.dart';
+import 'package:tickpocket_app/screens/camera.dart';
 
 final log = Logger('MainLogger');
-
-//TODO: Messages
-//TODO: Ticket info
 
 late List<CameraDescription> _cameras;
 late CameraDescription firstCamera;
@@ -80,7 +77,7 @@ class MyApp extends StatelessWidget {
         ),
         home: const AuthGate(),
         routes: {
-          '/NewPost': (context) => NewPostScreen(),
+          '/NewPost': (context) => const NewPostScreen(),
           '/Inbox': (context) => const InboxScreen(),
           '/Profile': (context) => const ProfileScreen()
         });
@@ -88,7 +85,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key, required this.title});
+  const MyHomePage({super.key});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -99,7 +96,6 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
@@ -156,7 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
               icon: const Icon(Icons.camera_alt),
             ),
             //Search Button
-            //TODO: Να κάνει fit το χώρο
+
             const TicketSearchAnchor(),
 
             //Profile Button
@@ -176,11 +172,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     isNotEqualTo: _firebaseAuth.currentUser!.email.toString())
                 .snapshots(),
             builder: (context, snapshot) {
-              List<TicketTile> PostsList = [];
+              List<TicketTile> postsLists = [];
               if (snapshot.hasData) {
                 final Tickets = snapshot.data?.docs.reversed.toList();
                 for (var ticket in Tickets!) {
-                  final TicketWidget = TicketTile(Ticket(
+                  final ticketWidget = TicketTile(Ticket(
                     ticket['email'],
                     ticket['title'],
                     ticket['place'],
@@ -188,11 +184,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     ticket['price'],
                     ticket['smallDesc'],
                   ));
-                  PostsList.add(TicketWidget);
+                  postsLists.add(ticketWidget);
                 }
               }
               return ListView(
-                children: PostsList,
+                children: postsLists,
               );
             }),
 

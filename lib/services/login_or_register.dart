@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tickpocket_app/routes/login.dart';
-import 'package:tickpocket_app/routes/registerpage.dart';
+import 'package:tickpocket_app/screens/login.dart';
+import 'package:tickpocket_app/screens/registerpage.dart';
 
 class LoginOrRegister extends StatefulWidget {
   const LoginOrRegister({super.key});
@@ -11,22 +11,22 @@ class LoginOrRegister extends StatefulWidget {
 
 class _LoginOrRegister extends State<LoginOrRegister> {
   //initially show the login screen
-  bool SignedUp = true;
+  bool signedUp = true;
 
   //toggle between login and register page
   void togglePages() {
     setState(() {
-      SignedUp = !SignedUp;
+      signedUp = !signedUp;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (SignedUp) {
+    if (signedUp) {
       return LoginPage(
         notRegistered: () {
           setState(() {
-            SignedUp = false;
+            signedUp = false;
           });
         },
       );
