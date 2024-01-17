@@ -1,20 +1,11 @@
-<<<<<<< HEAD
-# tickpocket_app
+# Tickpocket
+An app for ticket resales made for Human-Computer Interaction subject
 
-A new Flutter project.
+# Contents:
 
-## Getting Started
+-Chat service for communicating with resellers
 
-This project is a starting point for a Flutter application.
+-Option to search for a specific ticket
 
-A few resources to get you started if this is your first Flutter project:
+-Capability of poster scanning and then searching for a ticket based on the text recognised on the poster using an ML kit.  
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-=======
-# HCI-Tickpocket
->>>>>>> d14e4481a9a89c4786830a70d71193c9b7e9f793
