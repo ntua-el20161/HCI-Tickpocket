@@ -1,5 +1,5 @@
 # Tickpocket
-An app for ticket resales made for Human-Computer Interaction subject
+A mobile app for ticket resales made for Human-Computer Interaction subject
 
 # Contents:
 
